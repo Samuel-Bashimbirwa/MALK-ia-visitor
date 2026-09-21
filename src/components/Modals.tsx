@@ -699,7 +699,7 @@ const PrivacyModalContent: React.FC<{ onClose: () => void }> = () => {
           <strong>Usage de pseudonyme :</strong> Vous avez le droit d'utiliser un prénom fictif ou un pseudonyme pour poser vos questions à notre équipe.
         </p>
         <p>
-          <strong>Destinataire des requêtes :</strong> Vos messages sont directement transmis à la coordination administrative de MALK'ia (samuelbashimbirwa@gmail.com) et traités avec la plus stricte déontologie.
+          <strong>Destinataire des requêtes :</strong> Vos messages sont directement transmis à la coordination administrative de MALK'ia et traités avec la plus stricte déontologie.
         </p>
         <p>
           <strong>Suppression immédiate :</strong> Vous pouvez à tout moment demander l'effacement définitif de tout historique de vos messages.

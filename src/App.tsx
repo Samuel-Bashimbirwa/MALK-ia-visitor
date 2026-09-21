@@ -89,7 +89,7 @@ export default function App() {
         {/* 5. RDC Banner (Kinshasa view & map silhouette) */}
         <RdcBanner onOpenModal={setActiveModal} />
 
-        {/* 6. Questions & Contact Form (Linked to samuelbashimbirwa@gmail.com) */}
+        {/* 6. Questions & Contact Form */}
         <ContactSection />
       </main>
 

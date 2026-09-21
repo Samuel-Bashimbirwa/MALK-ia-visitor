@@ -76,7 +76,7 @@ export const DiagnosticsModalContent: React.FC<{ onClose: () => void }> = () => 
       const res = await fetch("/api/diagnostics/send-test", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: "samuelbashimbirwa@gmail.com" }),
+        body: JSON.stringify({ email: data?.adminEmail }),
       });
       const resJson = await res.json();
       setTestResult(resJson.message);
@@ -89,7 +89,7 @@ export const DiagnosticsModalContent: React.FC<{ onClose: () => void }> = () => 
   };
 
   const copyEnvSample = () => {
-    const text = `SMTP_HOST=smtp.gmail.com\nSMTP_PORT=465\nSMTP_SECURE=true\nSMTP_USER=samuelbashimbirwa@gmail.com\nSMTP_PASS=votremotdepasseapplication\nSMTP_FROM="Kimia RDC <samuelbashimbirwa@gmail.com>"`;
+    const text = `SMTP_HOST=smtp.gmail.com\nSMTP_PORT=465\nSMTP_SECURE=true\nSMTP_USER=votre-email@gmail.com\nSMTP_PASS=votre_mot_de_passe_application_16_lettres\nSMTP_FROM="MALK'ia RDC <votre-email@gmail.com>"\nADMIN_EMAIL=votre-email@gmail.com`;
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -145,7 +145,7 @@ export const DiagnosticsModalContent: React.FC<{ onClose: () => void }> = () => 
                 Port : <strong>3000</strong> (Express + Node.js)
               </p>
               <p className="text-xs text-[#524B40]">
-                E-mail destinataire : <strong>samuelbashimbirwa@gmail.com</strong>
+                E-mail destinataire : <strong>{data?.adminEmail || "Variable ADMIN_EMAIL"}</strong>
               </p>
             </div>
 
@@ -184,17 +184,17 @@ export const DiagnosticsModalContent: React.FC<{ onClose: () => void }> = () => 
                 <span>Résolution : Configuration du mot de passe Gmail (Erreur 535)</span>
               </div>
               <p className="leading-relaxed">
-                Google n'autorise plus l'utilisation du mot de passe standard de votre compte Google pour des applications externes. Pour que vos e-mails soient expédiés vers <strong>samuelbashimbirwa@gmail.com</strong>, vous devez créer un <strong>Mot de passe d'application</strong> (16 lettres) :
+                Google et la plupart des hébergeurs (comme Vercel) sécurisent les connexions SMTP par des variables d'environnement. Pour que vos e-mails soient expédiés vers <strong>{data?.adminEmail || "l'adresse configurée"}</strong>, vous pouvez définir un <strong>Mot de passe d'application</strong> (16 lettres) :
               </p>
               <ol className="list-decimal list-inside space-y-1 bg-white/70 p-3 rounded-xl border border-[#EADBBD] text-[11px] text-[#4A3D22]">
                 <li>Rendez-vous sur <a href="https://myaccount.google.com/security" target="_blank" rel="noreferrer" className="underline font-bold text-[#825313]">myaccount.google.com/security</a></li>
                 <li>Activez la <strong>Validation en deux étapes</strong> (si ce n'est pas déjà fait).</li>
-                <li>Dans la barre de recherche du compte Google, tapez <strong>« Mots de passe des applications »</strong> (ou App Passwords).</li>
-                <li>Créez-en un nommé <strong>« Kimia »</strong> : Google vous donne un code à 16 lettres (ex: <code>abcd efgh ijkl mnop</code>).</li>
-                <li>Collez ce code de 16 lettres dans votre secret <code>SMTP_PASS</code> (sans guillemets).</li>
+                <li>Dans la recherche du compte Google, tapez <strong>« Mots de passe des applications »</strong> (App Passwords).</li>
+                <li>Créez-en un nommé <strong>« MALK'ia »</strong> : Google vous donne un code à 16 lettres (ex: <code>abcd efgh ijkl mnop</code>).</li>
+                <li>Ajoutez ce code dans vos variables d'environnement Vercel sous <code>SMTP_PASS</code>.</li>
               </ol>
               <div className="bg-white/80 p-2.5 rounded-xl border border-[#E8DCBF] font-mono text-[11px] flex items-center justify-between">
-                <code>SMTP_HOST=smtp.gmail.com | SMTP_PORT=465 | SMTP_USER=samuelbashimbirwa@gmail.com | SMTP_PASS=...</code>
+                <code>SMTP_HOST | SMTP_PORT | SMTP_USER | SMTP_PASS | ADMIN_EMAIL</code>
                 <button
                   onClick={copyEnvSample}
                   className="ml-2 inline-flex items-center gap-1 text-xs font-sans text-[#825313] hover:underline cursor-pointer"
@@ -211,7 +211,7 @@ export const DiagnosticsModalContent: React.FC<{ onClose: () => void }> = () => 
             <div>
               <h4 className="font-bold text-sm text-[#1E1C1A]">Lancer un test immédiat</h4>
               <p className="text-xs text-[#736B5E]">
-                Déclenche l'envoi d'un message d'essai vers <strong>samuelbashimbirwa@gmail.com</strong>
+                Déclenche l'envoi d'un message d'essai vers <strong>{data?.adminEmail || "l'e-mail configuré"}</strong>
               </p>
             </div>
             <button

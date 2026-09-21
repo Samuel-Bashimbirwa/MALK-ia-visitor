@@ -12,10 +12,10 @@
  */
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
-const TARGET_EMAIL = process.argv[2] || "samuelbashimbirwa@gmail.com";
+const TARGET_EMAIL = process.argv[2] || process.env.ADMIN_EMAIL || "test@example.cd";
 
 console.log("=================================================");
-console.log(" TEST & DIAGNOSTIC AUTOMATISÉ — PLATEFORME KIMIA");
+console.log(" TEST & DIAGNOSTIC AUTOMATISÉ — PLATEFORME MALK'IA");
 console.log(`URL Cible : ${BASE_URL}`);
 console.log(`E-mail Test : ${TARGET_EMAIL}`);
 console.log("=================================================\n");

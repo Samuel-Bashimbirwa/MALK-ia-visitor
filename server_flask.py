@@ -1,7 +1,7 @@
 """
-Backend Flask pour la plateforme KIMIA RDC
+Backend Flask pour la plateforme MALK'IA RDC
 Ce script fournit les endpoints API pour l'envoi d'e-mails et la gestion des questions du public.
-Connecté à l'adresse e-mail administrative : samuelbashimbirwa@gmail.com
+Connecté à l'adresse e-mail administrative configurée via la variable d'environnement ADMIN_EMAIL.
 """
 
 import os
@@ -12,11 +12,11 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "samuelbashimbirwa@gmail.com")
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "")
 SMTP_SERVER = os.environ.get("SMTP_SERVER", "smtp.gmail.com")
 SMTP_PORT = int(os.environ.get("SMTP_PORT", 587))
-SMTP_USER = os.environ.get("SMTP_USER", ADMIN_EMAIL)
-SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD", "lhdw kzro nsin mxld")
+SMTP_USER = os.environ.get("SMTP_USER", "")
+SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD", "")
 
 # Registre en mémoire des questions reçues
 questions_db = []

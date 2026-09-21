@@ -1,6 +1,4 @@
 import nodemailer from "nodemailer";
-import fs from "fs";
-import path from "path";
 
 export interface SendMailOptions {
   to: string;
@@ -28,40 +26,8 @@ export interface MailLogEntry extends MailDeliveryResult {
   html: string;
 }
 
-// In-memory outbox log so the user can inspect every single email sent in real time
+// In-memory outbox log so inquiries can be audited in the diagnostics panel
 export const emailOutboxLogs: MailLogEntry[] = [];
-
-/**
- * Parses key-value pairs from .env.example as a seamless configuration fallback
- */
-function parseEnvExampleFallback(): Record<string, string> {
-  const result: Record<string, string> = {};
-  try {
-    const envPath = path.resolve(process.cwd(), ".env.example");
-    if (fs.existsSync(envPath)) {
-      const content = fs.readFileSync(envPath, "utf-8");
-      const lines = content.split("\n");
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed || trimmed.startsWith("#")) continue;
-        const eqIdx = trimmed.indexOf("=");
-        if (eqIdx !== -1) {
-          const key = trimmed.slice(0, eqIdx).trim();
-          let val = trimmed.slice(eqIdx + 1).trim();
-          if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
-            val = val.slice(1, -1).trim();
-          }
-          if (val) {
-            result[key] = val;
-          }
-        }
-      }
-    }
-  } catch (e) {
-    // Non-blocking
-  }
-  return result;
-}
 
 export interface EffectiveSmtpConfig {
   host: string | null;
@@ -74,51 +40,32 @@ export interface EffectiveSmtpConfig {
 }
 
 /**
- * Returns effective SMTP configuration from process.env or fallback to .env.example
+ * Returns effective SMTP configuration strictly from process.env (compatible with Vercel, Docker, etc.)
  */
 export function getEffectiveSmtpConfig(): EffectiveSmtpConfig {
-  const fallback = parseEnvExampleFallback();
-
-  const host = (process.env.SMTP_HOST || fallback.SMTP_HOST || "").trim() || null;
-  const rawPort = (process.env.SMTP_PORT || fallback.SMTP_PORT || "465").trim();
+  const host = (process.env.SMTP_HOST || "").trim() || null;
+  const rawPort = (process.env.SMTP_PORT || "465").trim();
   const port = parseInt(rawPort, 10) || 465;
-  const user = (process.env.SMTP_USER || fallback.SMTP_USER || "").trim() || null;
-  
-  // Retrieve password: if .env.example contains a valid 16-character App Password (like "lhdw kzro nsin mxld")
-  // and process.env.SMTP_PASS has a stale value that failed, prioritize the fresh App Password.
-  let rawPass = "";
-  const envExamplePass = (fallback.SMTP_PASS || "").trim();
-  const processEnvPass = (process.env.SMTP_PASS || "").trim();
+  const user = (process.env.SMTP_USER || "").trim() || null;
+  let rawPass = (process.env.SMTP_PASS || "").trim();
 
-  // A Google App Password is 16 letters (or 19 chars with 3 spaces)
-  const isAppPassPattern = (val: string) => /^[a-z]{4}\s?[a-z]{4}\s?[a-z]{4}\s?[a-z]{4}$/i.test(val);
-
-  if (isAppPassPattern(envExamplePass)) {
-    rawPass = envExamplePass;
-  } else if (processEnvPass) {
-    rawPass = processEnvPass;
-  } else if (envExamplePass) {
-    rawPass = envExamplePass;
-  }
-
+  // Strip wrapping quotes if provided
   if ((rawPass.startsWith('"') && rawPass.endsWith('"')) || (rawPass.startsWith("'") && rawPass.endsWith("'"))) {
     rawPass = rawPass.slice(1, -1).trim();
   }
 
-  // If this is a Google App Password (e.g. 16 characters with spaces like "lhdw kzro nsin mxld"), remove spaces
+  // Remove internal spaces if an app password was copied with spaces (e.g. "abcd efgh ijkl mnop")
   let pass: string | null = null;
   if (rawPass) {
-    const isGmail = host ? host.toLowerCase().includes("gmail.com") : false;
-    // If it looks like a 16-character google app password with spaces (4x4 blocks), remove internal whitespace
-    if (isGmail && /\s/.test(rawPass)) {
+    if (/\s/.test(rawPass)) {
       pass = rawPass.replace(/\s+/g, "");
     } else {
       pass = rawPass;
     }
   }
 
-  const rawFrom = process.env.SMTP_FROM || fallback.SMTP_FROM || user || "samuelbashimbirwa@gmail.com";
-  const secure = (process.env.SMTP_SECURE || fallback.SMTP_SECURE) === "true" || port === 465;
+  const rawFrom = process.env.SMTP_FROM || (user ? `MALK'ia RDC <${user}>` : "MALK'ia RDC");
+  const secure = process.env.SMTP_SECURE === "true" || port === 465;
 
   return {
     host,
@@ -151,11 +98,16 @@ export function getMailTransporter() {
       user: config.user,
       pass: config.pass,
     },
+    tls: {
+      rejectUnauthorized: false,
+    },
+    // Enforce IPv4 to avoid serverless IPv6 DNS timeouts on Vercel/AWS
+    family: 4,
     // Standard connection timeouts
     connectionTimeout: 10000,
     greetingTimeout: 10000,
     socketTimeout: 15000,
-  });
+  } as any);
 }
 
 function formatSmtpError(rawError: string): string {
@@ -178,14 +130,18 @@ export async function sendEmail({
   const timestamp = new Date().toISOString();
   const logId = `MAIL-${Date.now().toString(36).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;
   const config = getEffectiveSmtpConfig();
-  const fromAddress = config.from || "samuelbashimbirwa@gmail.com";
+  const fromAddress = config.user || process.env.ADMIN_EMAIL || "contact@malkia.cd";
 
   const transporter = getMailTransporter();
 
   if (transporter) {
     try {
+      const fromHeader = config.from && config.from.includes("<")
+        ? config.from
+        : `"MALK'ia — Droits des Femmes RDC" <${fromAddress}>`;
+
       const info = await transporter.sendMail({
-        from: `"MALK'ia — Droits des Femmes RDC" <${fromAddress}>`,
+        from: fromHeader,
         to,
         subject,
         text: text || html.replace(/<[^>]*>?/gm, ""),
