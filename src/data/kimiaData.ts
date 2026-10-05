@@ -8,7 +8,7 @@ export const TESTIMONIALS: Testimony[] = [
     age: 29,
     lawTopic: "Loi n° 06/018 sur les violences sexuelles",
     quote: "J'ignorais que la loi prévoyait des sanctions aussi fermes et une assistance médicale gratuite.",
-    story: "Après des mois de silence face au harcèlement de mon supérieur hiérarchique, le guide Kimia m'a permis d'identifier précisément les articles de loi applicables. Avec l'aide d'une avocate partenaire, j'ai osé porter plainte et obtenir justice.",
+    story: "Après des mois de silence face au harcèlement de mon supérieur hiérarchique, le guide Malk'ia m'a permis d'identifier précisément les articles de loi applicables. Avec l'aide d'une avocate partenaire, j'ai osé porter plainte et obtenir justice.",
     videoDuration: "1:45 min",
   },
   {
@@ -18,7 +18,7 @@ export const TESTIMONIALS: Testimony[] = [
     age: 34,
     lawTopic: "Code de la Famille révisé (Loi n° 16/008)",
     quote: "J'ai appris que mes droits de succession et la gestion de mes biens propres étaient garantis.",
-    story: "À la disparition de mon époux, ma belle-famille a tenté de m'expulser avec mes deux filles. Grâce aux conseils de Kimia et aux références précises du Code de la Famille, j'ai pu défendre notre foyer en justice.",
+    story: "À la disparition de mon époux, ma belle-famille a tenté de m'expulser avec mes deux filles. Grâce aux conseils de Malk'ia et aux références précises du Code de la Famille, j'ai pu défendre notre foyer en justice.",
     videoDuration: "2:10 min",
   },
   {
@@ -27,8 +27,8 @@ export const TESTIMONIALS: Testimony[] = [
     city: "Bukavu, Sud-Kivu",
     age: 26,
     lawTopic: "Protection contre les violences physiques et morales",
-    quote: "Kimia a été ma boussole quand je me sentais isolée et démunie.",
-    story: "La communauté Kimia m'a accueillie avec bienveillance. Avoir accès à un numéro d'écoute et à des juristes dévoués m'a donné le courage de reconstruire ma vie en toute sécurité.",
+    quote: "Malk'ia a été ma boussole quand je me sentais isolée et démunie.",
+    story: "La communauté Malk'ia m'a accueillie avec bienveillance. Avoir accès à un numéro d'écoute et à des juristes dévoués m'a donné le courage de reconstruire ma vie en toute sécurité.",
     videoDuration: "1:55 min",
   },
   {
@@ -38,7 +38,7 @@ export const TESTIMONIALS: Testimony[] = [
     age: 41,
     lawTopic: "Convention CEDEF / Protocole de Maputo",
     quote: "Les traités internationaux ratifiés par la RDC sont une arme juridique concrète.",
-    story: "En tant qu'enseignante, j'ai distribué le guide Kimia à toutes les mères d'élèves de mon quartier. Savoir identifier les abus dès les premiers signes a permis de sauver plusieurs jeunes filles.",
+    story: "En tant qu'enseignante, j'ai distribué le guide Malk'ia à toutes les mères d'élèves de mon quartier. Savoir identifier les abus dès les premiers signes a permis de sauver plusieurs jeunes filles.",
     videoDuration: "2:30 min",
   },
 ];

@@ -43,4 +43,5 @@ export type ModalType =
   | "privacy"
   | "faq"
   | "video"
-  | "diagnostics";
+  | "diagnostics"
+  | "team-editor";

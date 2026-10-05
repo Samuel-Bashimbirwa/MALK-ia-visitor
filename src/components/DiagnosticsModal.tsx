@@ -108,7 +108,7 @@ export const DiagnosticsModalContent: React.FC<{ onClose: () => void }> = () => 
               Diagnostic & État des E-mails
             </h3>
             <p className="text-xs text-[#736B5E]">
-              Outil de vérification et de journalisation des messages Kimia
+              Outil de vérification et de journalisation des messages Malk'ia
             </p>
           </div>
         </div>

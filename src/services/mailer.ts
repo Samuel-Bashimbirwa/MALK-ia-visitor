@@ -177,7 +177,7 @@ export async function sendEmail({
     } catch (smtpError: any) {
       const rawMsg = smtpError.message || "Erreur de connexion au serveur SMTP";
       const friendlyError = formatSmtpError(rawMsg);
-      console.warn(`[Kimia Mailer Warning] Relais SMTP non abouti: ${friendlyError}`);
+      console.warn(`[Malk'ia Mailer Warning] Relais SMTP non abouti: ${friendlyError}`);
 
       const entry: MailLogEntry = {
         id: logId,
@@ -217,7 +217,7 @@ export async function sendEmail({
     replyTo,
     subject,
     timestamp,
-    error: "Aucun serveur SMTP externe configuré (SMTP_HOST, SMTP_USER, SMTP_PASS manquants). L'e-mail est sauvegardé dans le journal Kimia.",
+    error: "Aucun serveur SMTP externe configuré (SMTP_HOST, SMTP_USER, SMTP_PASS manquants). L'e-mail est sauvegardé dans le journal Malk'ia.",
     previewSnippet: text ? text.slice(0, 150) : html.replace(/<[^>]*>?/gm, "").slice(0, 150),
     html,
   };

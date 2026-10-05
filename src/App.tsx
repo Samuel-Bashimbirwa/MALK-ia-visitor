@@ -4,6 +4,7 @@ import { Hero } from "./components/Hero";
 import { TestimonialsVideo } from "./components/TestimonialsVideo";
 import { BookSection } from "./components/BookSection";
 import { ActionDomains } from "./components/ActionDomains";
+import { CommunityHub } from "./components/CommunityHub";
 import { RdcBanner } from "./components/RdcBanner";
 import { ContactSection } from "./components/ContactSection";
 import { Footer } from "./components/Footer";
@@ -86,7 +87,10 @@ export default function App() {
         {/* 4. Action Domains (Informer. Accompagner. Protéger.) */}
         <ActionDomains onOpenModal={setActiveModal} />
 
-        {/* 5. RDC Banner (Kinshasa view & map silhouette) */}
+        {/* 5. Community Hub: Quiz Droits VBG & Générateur de Statuts WhatsApp */}
+        <CommunityHub onOpenModal={setActiveModal} />
+
+        {/* 6. RDC Banner (Kinshasa view & map silhouette) */}
         <RdcBanner onOpenModal={setActiveModal} />
 
         {/* 6. Questions & Contact Form */}

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { KimiaLogo } from "./KimiaLogo";
+import { MalkiaLogo } from "./MalkiaLogo";
 import { ChevronDown, Menu, X, BookOpen, Users, Scale, PhoneCall, Smartphone, ShieldCheck, HelpCircle, FileText, Lock, Activity } from "lucide-react";
 import { ModalType } from "../types";
 
@@ -38,7 +38,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenModal, activeSection }) =>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         {/* Logo */}
         <a href="#accueil" className="focus:outline-hidden focus:ring-2 focus:ring-[#D4A346] rounded-lg p-1">
-          <KimiaLogo size="md" />
+          <MalkiaLogo size="md" />
         </a>
 
         {/* Desktop Navigation */}
@@ -125,7 +125,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenModal, activeSection }) =>
                   className="w-full text-left px-3.5 py-2 text-sm text-[#2D2A26] hover:bg-[#FAF6EE] hover:text-[#B8882C] flex items-center gap-2.5 transition-colors cursor-pointer"
                 >
                   <Smartphone className="w-4 h-4 text-[#D4A346]" />
-                  <span>Télécharger l'application Kimia</span>
+                  <span>Télécharger l'application Malk'ia</span>
                 </button>
 
                 <div className="border-t border-[#F4EFE6] my-1 pt-1">

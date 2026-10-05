@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * Script de diagnostic Kimia RDC
+ * Script de diagnostic Malk'ia RDC
  * Usage: node test-diagnostics.js [target-email]
  * 
  * Ce script teste :
- * 1. La disponibilité du serveur Kimia (/api/health)
+ * 1. La disponibilité du serveur Malk'ia (/api/health)
  * 2. L'état de la configuration SMTP / E-mail (/api/diagnostics)
  * 3. L'envoi d'une question test (/api/questions)
  * 4. L'envoi d'un e-mail de test immédiat (/api/diagnostics/send-test)
@@ -71,7 +71,7 @@ async function runTests() {
   try {
     console.log("\n▶ [Test 3/5] Test de soumission de formulaire de contact (/api/questions)...");
     const testPayload = {
-      name: "Testeur Automatisé Kimia",
+      name: "Testeur Automatisé Malk'ia",
       email: TARGET_EMAIL,
       phone: "+243 81 000 0000",
       province: "Kinshasa",

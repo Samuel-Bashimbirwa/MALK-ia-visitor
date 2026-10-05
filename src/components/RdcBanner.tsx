@@ -9,7 +9,7 @@ interface RdcBannerProps {
 
 export const RdcBanner: React.FC<RdcBannerProps> = ({ onOpenModal }) => {
   return (
-    <section id="communaute" className="py-12 lg:py-16 bg-[#FAF8F5]">
+    <section id="rdc-ensemble" className="py-12 lg:py-16 bg-[#FAF8F5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative rounded-3xl overflow-hidden bg-[#F6F0E4] border border-[#E7DEC8] shadow-sm">
           <div className="grid grid-cols-1 md:grid-cols-12 items-center">

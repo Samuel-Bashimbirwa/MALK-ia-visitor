@@ -24,7 +24,7 @@ interface Inquiry {
 
 const inquiries: Inquiry[] = [
   {
-    id: "KIM-8421",
+    id: "MALK-8421",
     name: "Mireille Kasongo",
     email: "mireille.k@example.cd",
     subject: "Orientation juridique",
@@ -35,7 +35,7 @@ const inquiries: Inquiry[] = [
     targetRecipient: process.env.ADMIN_EMAIL || "contact@malkia.cd",
   },
   {
-    id: "KIM-8422",
+    id: "MALK-8422",
     name: "Chantal Mwamba",
     email: "chantal.mwamba@example.cd",
     subject: "Procurez-vous le livre",
@@ -60,7 +60,7 @@ apiRouter.get("/health", (_req, res) => {
   const config = getEffectiveSmtpConfig();
   res.json({
     status: "ok",
-    platform: "Kimia RDC Web Platform",
+    platform: "MALK'ia RDC Web Platform",
     adminEmail: ADMIN_EMAIL,
     smtpConfigured: config.isConfigured,
     smtpHost: config.host ? `${config.host}:${config.port}` : "Non configuré (mode journal actif)",
@@ -138,7 +138,7 @@ apiRouter.post("/questions", async (req, res) => {
       });
     }
 
-    const newId = `KIM-${Math.floor(1000 + Math.random() * 9000)}`;
+    const newId = `MALK-${Math.floor(1000 + Math.random() * 9000)}`;
     
     // Dispatch real email to Admin
     const adminMailResult = await sendEmail({
@@ -250,10 +250,10 @@ apiRouter.post("/book-order", async (req, res) => {
   const mailResult = await sendEmail({
     to: ADMIN_EMAIL,
     replyTo: email,
-    subject: `[Kimia Guide] Nouvelle commande de livre ${orderId} (${format})`,
+    subject: `[Malk'ia Guide] Nouvelle commande de livre ${orderId} (${format})`,
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px; background: #FAF8F5;">
-        <h2>Nouvelle commande du livre Kimia</h2>
+        <h2>Nouvelle commande du livre Malk'ia</h2>
         <p><strong>N° Commande :</strong> ${orderId}</p>
         <p><strong>Demandeur :</strong> ${name} (<a href="mailto:${email}">${email}</a>)</p>
         <p><strong>Téléphone :</strong> ${phone || "Non renseigné"}</p>
@@ -268,7 +268,7 @@ apiRouter.post("/book-order", async (req, res) => {
     success: true,
     orderId,
     message:
-      "Votre demande d'acquisition du guide Kimia a été enregistrée avec succès.",
+      "Votre demande d'acquisition du guide Malk'ia a été enregistrée avec succès.",
     targetEmail: ADMIN_EMAIL,
     deliveryInfo: mailResult,
   });
@@ -281,11 +281,319 @@ apiRouter.post("/community-join", (req, res) => {
     return res.status(400).json({ error: "Nom et e-mail requis." });
   }
 
-  console.log(`[Kimia Community] New Member: ${name} (${email}) - ${role || "Sympathisante"}`);
+  console.log(`[Malk'ia Community] New Member: ${name} (${email}) - ${role || "Sympathisante"}`);
 
   return res.status(201).json({
     success: true,
-    message: "Bienvenue dans la communauté Kimia ! Vous recevrez le lien du groupe d'entraide.",
+    message: "Bienvenue dans la communauté Malk'ia ! Vous recevrez le lien du groupe d'entraide.",
+  });
+});
+
+// Community status proposal endpoint (Manual moderation via email)
+apiRouter.post("/status-proposal", async (req, res) => {
+  const {
+    author = "Anonyme",
+    theme = "Sensibilisation",
+    message,
+    contact = "Non précisé",
+    city = "Non spécifié",
+  } = req.body;
+
+  if (!message || !String(message).trim()) {
+    return res.status(400).json({ error: "Le message ou texte du statut est obligatoire." });
+  }
+
+  const cleanAuthor = String(author).trim() || "Membre Anonyme";
+  const cleanTheme = String(theme).trim();
+  const cleanMessage = String(message).trim();
+  const cleanContact = String(contact).trim();
+
+  // Send structured email to enterprise/admin email
+  const mailResult = await sendEmail({
+    to: ADMIN_EMAIL,
+    subject: `[MALK'ia Communauté] Nouvelle proposition de statut : "${cleanTheme}" par ${cleanAuthor}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #E6DDCC; border-radius: 12px; background: #FAF8F5;">
+        <h2 style="color: #1E1C1A; border-bottom: 2px solid #D4A346; padding-bottom: 8px;">
+          Nouvelle proposition de statut / citation communautaire
+        </h2>
+        <p><strong>Auteur / Pseudo :</strong> ${cleanAuthor}</p>
+        <p><strong>Thème :</strong> <span style="background: #E8DCC4; padding: 2px 8px; border-radius: 4px; font-weight: bold;">${cleanTheme}</span></p>
+        <p><strong>Contact :</strong> ${cleanContact}</p>
+        <p><strong>Ville / Province :</strong> ${city}</p>
+        
+        <div style="margin-top: 15px; padding: 15px; background: #FFFFFF; border-left: 4px solid #D4A346; border-radius: 4px;">
+          <h4 style="margin: 0 0 8px 0; color: #544D42;">Texte proposé pour le statut :</h4>
+          <p style="white-space: pre-wrap; font-size: 15px; color: #1E1C1A; line-height: 1.6; margin: 0; font-style: italic;">
+            "${cleanMessage}"
+          </p>
+        </div>
+
+        <div style="margin-top: 20px; padding: 12px; background: #F1EAE0; border-radius: 6px; font-size: 13px; color: #645D51;">
+          💡 <strong>Astuce :</strong> Vous pouvez copier directement ce texte pour le diffuser sur votre statut WhatsApp officiel ou l'ajouter au site !
+        </div>
+      </div>
+    `,
+    text: `Nouvelle proposition de statut par ${cleanAuthor} (${cleanContact}) - Thème: ${cleanTheme}\n\n"${cleanMessage}"`,
+  });
+
+  return res.status(201).json({
+    success: true,
+    message: "Merci beaucoup ! Votre proposition a bien été transmise par e-mail à l'équipe MALK'ia. Nous la relirons manuellement pour la diffuser.",
+    deliveryInfo: mailResult,
+  });
+});
+
+// ==========================================
+// 48-HOUR QUESTIONNAIRES & TEAM PUBLISHING
+// ==========================================
+export interface DynamicQuestion {
+  id: string;
+  question: string;
+  type: "boolean" | "options";
+  options?: string[];
+  correctAnswer: boolean | string;
+  explanation: string;
+  lawRef: string;
+  createdAt: number;
+  expiresAt: number; // Exactly 48 hours after creation
+  authorName?: string;
+}
+
+const initial48hQuestions: DynamicQuestion[] = [
+  {
+    id: "q-48h-1",
+    question: "En RDC, un époux a-t-il le droit d'interdire à son épouse d'exercer une profession ou d'ouvrir un compte bancaire personnel ?",
+    type: "boolean",
+    correctAnswer: false,
+    explanation:
+      "L'autorisation maritale a été formellement abolie par la Loi n° 16/008. La femme congolaise mariée dispose désormais de sa pleine capacité civile et juridique.",
+    lawRef: "Loi n° 16/008 révisant le Code de la Famille",
+    createdAt: Date.now(),
+    expiresAt: Date.now() + 48 * 3600 * 1000,
+    authorName: "Équipe Juridique MALK'ia",
+  },
+  {
+    id: "q-48h-2",
+    question: "Quel est le délai d'urgence vitale pour recevoir la prise en charge médicale gratuite (kit PEP anti-VIH et soins) après une agression ?",
+    type: "options",
+    options: ["24 heures", "72 heures", "1 semaine"],
+    correctAnswer: "72 heures",
+    explanation:
+      "La prophylaxie post-exposition (PEP) doit impérativement être administrée dans les 72 heures pour prévenir efficacement la transmission du VIH et d'autres complications.",
+    lawRef: "Protocole National de Prise en Charge Médicale VBG en RDC",
+    createdAt: Date.now(),
+    expiresAt: Date.now() + 48 * 3600 * 1000,
+    authorName: "Équipe Médicale & Urgence MALK'ia",
+  },
+  {
+    id: "q-48h-3",
+    question: "La belle-famille a-t-elle le droit d'expulser une veuve et ses orphelins de la maison conjugale à la disparition du mari ?",
+    type: "boolean",
+    correctAnswer: false,
+    explanation:
+      "La loi protège expressément le conjoint survivant et ses enfants. Le déguerpissement forcé et la spoliation successorale sont des délits punis par le Code Pénal et le Code de la Famille.",
+    lawRef: "Code de la Famille (Articles 758 et suivants)",
+    createdAt: Date.now(),
+    expiresAt: Date.now() + 48 * 3600 * 1000,
+    authorName: "Équipe Juridique MALK'ia",
+  },
+];
+
+let dynamicQuestions: DynamicQuestion[] = [...initial48hQuestions];
+
+// 1. Get active 48-Hour questions
+apiRouter.get("/quiz-48h", (_req, res) => {
+  const now = Date.now();
+  // Filter active (expiresAt > now)
+  let active = dynamicQuestions.filter((q) => q.expiresAt > now);
+
+  // If all expired, renew default with a fresh 48h window so site never looks empty
+  if (active.length === 0) {
+    dynamicQuestions = initial48hQuestions.map((q, idx) => ({
+      ...q,
+      createdAt: now,
+      expiresAt: now + (48 - idx * 4) * 3600 * 1000,
+    }));
+    active = dynamicQuestions;
+  }
+
+  const enriched = active.map((q) => {
+    const remainingMs = Math.max(0, q.expiresAt - now);
+    const remainingHours = Math.floor(remainingMs / (3600 * 1000));
+    const remainingMinutes = Math.floor((remainingMs % (3600 * 1000)) / (60 * 1000));
+
+    return {
+      ...q,
+      remainingMs,
+      remainingHours,
+      remainingMinutes,
+      formattedCountdown: `${remainingHours}h ${remainingMinutes}m`,
+    };
+  });
+
+  res.json({
+    success: true,
+    total: enriched.length,
+    questions: enriched,
+    serverTime: new Date().toISOString(),
+  });
+});
+
+// 2. Secret endpoint for Team to post new 48H question (Protected by PIN)
+apiRouter.post("/admin/quiz-question", async (req, res) => {
+  const {
+    adminPin,
+    question,
+    type = "boolean",
+    options,
+    correctAnswer,
+    explanation,
+    lawRef = "Lois RDC sur les droits des femmes",
+    authorName = "Équipe MALK'ia",
+  } = req.body;
+
+  // Verify PIN (default malkia2026, or check environment variable)
+  const validPin = process.env.TEAM_PIN || "malkia2026";
+  if (!adminPin || String(adminPin).trim() !== validPin) {
+    return res.status(403).json({
+      error: "Code secret d'équipe invalide. Accès réservé à l'équipe MALK'ia.",
+    });
+  }
+
+  if (!question || !explanation || correctAnswer === undefined) {
+    return res.status(400).json({
+      error: "Veuillez renseigner la question, la bonne réponse et l'explication juridique.",
+    });
+  }
+
+  const now = Date.now();
+  const expiresAt = now + 48 * 3600 * 1000; // Strictly 48 hours
+
+  const newQuestion: DynamicQuestion = {
+    id: `q-48h-${Date.now()}`,
+    question: String(question).trim(),
+    type: type === "options" ? "options" : "boolean",
+    options: Array.isArray(options) && options.length > 0 ? options : undefined,
+    correctAnswer,
+    explanation: String(explanation).trim(),
+    lawRef: String(lawRef).trim(),
+    createdAt: now,
+    expiresAt,
+    authorName: String(authorName).trim() || "Équipe MALK'ia",
+  };
+
+  dynamicQuestions.unshift(newQuestion);
+
+  // Send email to team confirmation
+  await sendEmail({
+    to: ADMIN_EMAIL,
+    subject: `[MALK'ia Équipe] Nouveau questionnaire 48H mis en ligne`,
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px; background: #FAF8F5; border-radius: 12px; border: 1px solid #E6DDCC;">
+        <h2 style="color: #1E1C1A; border-bottom: 2px solid #D4A346; padding-bottom: 8px;">
+          Nouveau questionnaire 48H publié sur MALK'ia
+        </h2>
+        <p><strong>Auteur :</strong> ${newQuestion.authorName}</p>
+        <p><strong>Validité :</strong> 48 heures (Expire le : ${new Date(expiresAt).toLocaleString("fr-FR")})</p>
+        <div style="background: #FFF; padding: 15px; border-radius: 8px; border: 1px solid #E2D9C8; margin: 15px 0;">
+          <h4 style="margin: 0 0 8px 0; color: #1E1C1A;">« ${newQuestion.question} »</h4>
+          <p><strong>Réponse exacte :</strong> ${String(newQuestion.correctAnswer)}</p>
+          <p><strong>Référence légale :</strong> ${newQuestion.lawRef}</p>
+          <p><strong>Explication :</strong> ${newQuestion.explanation}</p>
+        </div>
+      </div>
+    `,
+  });
+
+  return res.status(201).json({
+    success: true,
+    message: "Le questionnaire 48H a été mis en ligne avec succès sur le site !",
+    question: newQuestion,
+  });
+});
+
+// 3. Visitor participates in 48H questionnaire: receives confirmation email & WhatsApp status copy
+apiRouter.post("/quiz-participate", async (req, res) => {
+  const {
+    name,
+    email,
+    phone,
+    countryCode = "CD",
+    questionText,
+    userAnswer,
+    isCorrect,
+    explanation,
+    lawRef,
+    score,
+    total,
+  } = req.body;
+
+  if (!email || !String(email).trim()) {
+    return res.status(400).json({ error: "Adresse email requise pour recevoir la confirmation." });
+  }
+
+  const cleanName = String(name || "Chère participante").trim();
+  const cleanEmail = String(email).trim().toLowerCase();
+  const cleanPhone = String(phone || "Non renseigné").trim();
+  const statusShareText = `🎯 J'ai répondu au questionnaire 48H sur MALK'ia RDC ! Connais-tu tes droits face aux violences ? Teste ton score toi aussi sur : https://malkia.cd/#communaute #MALKiaRDC`;
+
+  // 1. Send confirmation email to visitor
+  const visitorMail = await sendEmail({
+    to: cleanEmail,
+    subject: `[MALK'ia RDC] Confirmation de votre participation au Défi 48H — Vos Droits`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #E6DDCC; border-radius: 12px; background: #FAF8F5;">
+        <h2 style="color: #B8882C; margin-top: 0;">MALK'ia — Droits des Femmes en RDC</h2>
+        <p>Bonjour ${cleanName},</p>
+        <p>Félicitations pour votre engagement ! Vous venez de participer à notre questionnaire de sensibilisation 48H.</p>
+        
+        <div style="background: #FFFFFF; padding: 15px; border-radius: 8px; border: 1px solid #DDD5C5; margin: 15px 0;">
+          <h4 style="margin: 0 0 8px 0; color: #1E1C1A;">Résultat de votre participation :</h4>
+          <p><strong>Question :</strong> « ${questionText || "Questionnaire Droits"} »</p>
+          <p><strong>Votre réponse :</strong> <span style="font-weight: bold; color: ${isCorrect ? "#15803d" : "#b91c1c"};">${String(userAnswer)} (${isCorrect ? "Correcte ✅" : "Incorrecte ❌"})</span></p>
+          ${explanation ? `<p style="margin-top: 10px; font-size: 13px; color: #474034; line-height: 1.5;"><strong>Fondement légal :</strong> ${explanation}</p>` : ""}
+          ${lawRef ? `<p style="font-size: 11px; color: #8C6B24; font-weight: bold; text-transform: uppercase;">${lawRef}</p>` : ""}
+        </div>
+
+        <div style="background: #E8F5E9; border: 1px solid #A5D6A7; padding: 15px; border-radius: 8px; margin: 15px 0;">
+          <h4 style="margin: 0 0 5px 0; color: #2E7D32;">📲 Partagez votre résultat sur votre Statut WhatsApp :</h4>
+          <p style="font-size: 13px; color: #1B5E20; margin: 0; font-style: italic;">
+            "${statusShareText}"
+          </p>
+        </div>
+
+        <p style="font-size: 12px; color: #7A7264; margin-top: 20px;">
+          En cas d'urgence ou de besoin d'accompagnement juridique gratuit en RDC, le numéro vert <strong>122</strong> est accessible 24h/24.<br/>
+          L'équipe MALK'ia — « Connaître ses droits, c'est mieux. »
+        </p>
+      </div>
+    `,
+    text: `Bonjour ${cleanName}, merci pour votre participation au Défi 48H MALK'ia !\n\nPartagez en statut : "${statusShareText}"`,
+  });
+
+  // 2. Notify team about new participant
+  await sendEmail({
+    to: ADMIN_EMAIL,
+    subject: `[MALK'ia Participation 48H] ${cleanName} (${cleanPhone})`,
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px; background: #FAF8F5;">
+        <h2>Nouvelle participation au questionnaire 48H</h2>
+        <p><strong>Nom :</strong> ${cleanName}</p>
+        <p><strong>E-mail :</strong> <a href="mailto:${cleanEmail}">${cleanEmail}</a></p>
+        <p><strong>Téléphone mondial :</strong> ${cleanPhone} (Pays: ${countryCode})</p>
+        <p><strong>Question :</strong> ${questionText}</p>
+        <p><strong>Réponse :</strong> ${String(userAnswer)} (${isCorrect ? "Correcte" : "Incorrecte"})</p>
+        <p><strong>Score :</strong> ${score || 1} / ${total || 1}</p>
+      </div>
+    `,
+  });
+
+  return res.status(201).json({
+    success: true,
+    message: "Votre participation a bien été enregistrée ! Un e-mail de confirmation vous a été envoyé.",
+    statusShareText,
+    deliveryInfo: visitorMail,
   });
 });
 

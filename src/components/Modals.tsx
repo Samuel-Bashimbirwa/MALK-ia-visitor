@@ -21,6 +21,8 @@ import { ModalType } from "../types";
 import { FAQ_ITEMS, LAWYER_PARTNERS } from "../data/kimiaData";
 import bookImg from "../assets/images/kimia_guide_book_1790018924214.jpg";
 import { DiagnosticsModalContent } from "./DiagnosticsModal";
+import { TeamQuestionModal } from "./TeamQuestionModal";
+import { InternationalPhoneInput } from "./InternationalPhoneInput";
 
 interface ModalsProps {
   activeModal: ModalType;
@@ -59,6 +61,7 @@ export const Modals: React.FC<ModalsProps> = ({
         {activeModal === "privacy" && <PrivacyModalContent onClose={onClose} />}
         {activeModal === "faq" && <FaqModalContent onClose={onClose} />}
         {activeModal === "diagnostics" && <DiagnosticsModalContent onClose={onClose} />}
+        {activeModal === "team-editor" && <TeamQuestionModal onClose={onClose} />}
       </div>
     </div>
   );
@@ -224,13 +227,13 @@ const BookModalContent: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-[#544D42] mb-1">Téléphone / WhatsApp</label>
-                <input
-                  type="tel"
-                  placeholder="+243 ..."
+                <label className="block text-xs font-semibold text-[#544D42] mb-1">
+                  Téléphone / WhatsApp (tous pays)
+                </label>
+                <InternationalPhoneInput
                   value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-white border border-[#DDD5C5] rounded-xl text-sm"
+                  onChange={(num) => setFormData({ ...formData, phone: num })}
+                  placeholder="81 234 5678"
                 />
               </div>
 
@@ -314,10 +317,19 @@ const BookModalContent: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 /* ------------------------------------------------------------- */
 const CommunityModalContent: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [joined, setJoined] = useState(false);
-  const [formData, setFormData] = useState({ name: "", email: "", province: "Kinshasa" });
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", province: "Kinshasa" });
 
-  const handleJoin = (e: React.FormEvent) => {
+  const handleJoin = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      await fetch("/api/community-join", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+    } catch (err) {
+      console.error(err);
+    }
     setJoined(true);
   };
 
@@ -374,14 +386,25 @@ const CommunityModalContent: React.FC<{ onClose: () => void }> = ({ onClose }) =
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#544D42] mb-1">Votre e-mail ou WhatsApp</label>
+            <label className="block text-xs font-semibold text-[#544D42] mb-1">Votre e-mail</label>
             <input
-              type="text"
+              type="email"
               required
               placeholder="votre.contact@exemple.cd"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="w-full px-3.5 py-2.5 bg-white border border-[#DDD5C5] rounded-xl text-sm"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-[#544D42] mb-1">
+              Numéro de téléphone / WhatsApp (tous pays)
+            </label>
+            <InternationalPhoneInput
+              value={formData.phone}
+              onChange={(num) => setFormData({ ...formData, phone: num })}
+              placeholder="81 234 5678"
             />
           </div>
 

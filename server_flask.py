@@ -25,7 +25,7 @@ questions_db = []
 def health_check():
     return jsonify({
         "status": "ok",
-        "service": "Kimia Flask Backend",
+        "service": "MALK'ia Flask Backend",
         "connected_email": ADMIN_EMAIL,
         "timestamp": datetime.utcnow().isoformat()
     })
@@ -42,7 +42,7 @@ def submit_question():
     if not name or not email or not message:
         return jsonify({"error": "Nom, adresse email et message sont obligatoires."}), 400
 
-    inquiry_id = f"KIM-{len(questions_db) + 1001}"
+    inquiry_id = f"MALK-{len(questions_db) + 1001}"
     record = {
         "id": inquiry_id,
         "name": name,
@@ -58,13 +58,13 @@ def submit_question():
 
     # Simulation / envoi réel de l'email
     print(f"📧 [Email Envoyé à l'Admin]: {ADMIN_EMAIL}")
-    print(f"Objet: [Kimia RDC] {subject} - de {name} ({email})")
+    print(f"Objet: [MALK'ia RDC] {subject} - de {name} ({email})")
     print(f"Corps: {message}")
     print(f"✉️ [Accusé de réception envoyé à l'utilisatrice]: {email}")
 
     return jsonify({
         "success": True,
-        "message": "Votre message a été transmis à l'équipe Kimia. Vous recevrez une réponse personnalisée par e-mail sous peu.",
+        "message": "Votre message a été transmis à l'équipe Malk'ia. Vous recevrez une réponse personnalisée par e-mail sous peu.",
         "reference_code": inquiry_id,
         "admin_connected": ADMIN_EMAIL
     }), 201
@@ -80,19 +80,19 @@ def book_order():
     if not name or not email:
         return jsonify({"error": "Nom et e-mail requis."}), 400
 
-    order_id = f"LIVRE-KIM-{len(questions_db) + 5001}"
-    print(f"📚 [Commande Livre Kimia]: {order_id} pour {name} ({email}) à {city} (Format: {fmt})")
+    order_id = f"LIVRE-MALK-{len(questions_db) + 5001}"
+    print(f"📚 [Commande Livre Malk'ia]: {order_id} pour {name} ({email}) à {city} (Format: {fmt})")
     print(f"Notification transmise à: {ADMIN_EMAIL}")
 
     return jsonify({
         "success": True,
         "order_id": order_id,
-        "message": "Votre commande de guide Kimia a été enregistrée. Les détails d'expédition vous ont été envoyés par email.",
+        "message": "Votre commande de guide Malk'ia a été enregistrée. Les détails d'expédition vous ont été envoyés par email.",
         "admin_connected": ADMIN_EMAIL
     }), 201
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    print(f"🚀 Serveur Flask Kimia démarré sur le port {port}")
+    print(f"🚀 Serveur Flask Malk'ia démarré sur le port {port}")
     print(f"📧 Email administrateur relié : {ADMIN_EMAIL}")
     app.run(host="0.0.0.0", port=port, debug=True)

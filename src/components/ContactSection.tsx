@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Send, CheckCircle2, AlertCircle, Phone, Lock, Sparkles, Clock } from "lucide-react";
 import supportAgentImg from "../assets/images/kimia_support_agent_1790018903402.jpg";
+import { InternationalPhoneInput } from "./InternationalPhoneInput";
 
 export const ContactSection: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -64,7 +65,7 @@ export const ContactSection: React.FC = () => {
       }
 
       setSuccessResponse({
-        referenceCode: data.referenceCode || `KIM-${Math.floor(1000 + Math.random() * 9000)}`,
+        referenceCode: data.referenceCode || `MALK-${Math.floor(1000 + Math.random() * 9000)}`,
         message: data.message || "Votre question a été enregistrée avec succès.",
       });
 
@@ -80,7 +81,7 @@ export const ContactSection: React.FC = () => {
     } catch (err: any) {
       console.error(err);
       // Fallback optimistic simulation if network is restricted
-      const mockCode = `KIM-${Math.floor(1000 + Math.random() * 9000)}`;
+      const mockCode = `MALK-${Math.floor(1000 + Math.random() * 9000)}`;
       setSuccessResponse({
         referenceCode: mockCode,
         message:
@@ -191,8 +192,23 @@ export const ContactSection: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Row 2: Subject & Province */}
+                {/* Row 2: Phone & Subject */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      htmlFor="form-phone"
+                      className="block text-xs font-semibold text-[#544D42] mb-1.5"
+                    >
+                      Numéro de téléphone / WhatsApp (tous pays)
+                    </label>
+                    <InternationalPhoneInput
+                      id="form-phone"
+                      value={formData.phone}
+                      onChange={(num) => setFormData({ ...formData, phone: num })}
+                      placeholder="81 234 5678"
+                    />
+                  </div>
+
                   <div>
                     <label
                       htmlFor="form-subject"
@@ -213,27 +229,28 @@ export const ContactSection: React.FC = () => {
                       ))}
                     </select>
                   </div>
+                </div>
 
-                  <div>
-                    <label
-                      htmlFor="form-province"
-                      className="block text-xs font-semibold text-[#544D42] mb-1.5"
-                    >
-                      Votre province / Localisation
-                    </label>
-                    <select
-                      id="form-province"
-                      value={formData.province}
-                      onChange={(e) => setFormData({ ...formData, province: e.target.value })}
-                      className="w-full px-4 py-3 bg-white border border-[#DDD5C5] rounded-xl text-[#1E1C1A] focus:outline-hidden focus:ring-2 focus:ring-[#D4A346] focus:border-transparent text-sm transition-all cursor-pointer"
-                    >
-                      {provinces.map((p) => (
-                        <option key={p} value={p}>
-                          {p}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                {/* Row 3: Province */}
+                <div>
+                  <label
+                    htmlFor="form-province"
+                    className="block text-xs font-semibold text-[#544D42] mb-1.5"
+                  >
+                    Votre province / Localisation
+                  </label>
+                  <select
+                    id="form-province"
+                    value={formData.province}
+                    onChange={(e) => setFormData({ ...formData, province: e.target.value })}
+                    className="w-full px-4 py-3 bg-white border border-[#DDD5C5] rounded-xl text-[#1E1C1A] focus:outline-hidden focus:ring-2 focus:ring-[#D4A346] focus:border-transparent text-sm transition-all cursor-pointer"
+                  >
+                    {provinces.map((p) => (
+                      <option key={p} value={p}>
+                        {p}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 {/* Row 3: Message Textarea */}
@@ -282,7 +299,7 @@ export const ContactSection: React.FC = () => {
               <div className="rounded-3xl overflow-hidden shadow-lg border border-[#EDE4D4] bg-[#FAF5EB] aspect-3/4 sm:aspect-4/5 relative">
                 <img
                   src={supportAgentImg}
-                  alt="Conseillère d'écoute et d'assistance Kimia"
+                  alt="Conseillère d'écoute et d'assistance Malk'ia"
                   className="w-full h-full object-cover object-center"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />

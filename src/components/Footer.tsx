@@ -1,5 +1,5 @@
 import React from "react";
-import { KimiaLogo } from "./KimiaLogo";
+import { MalkiaLogo } from "./MalkiaLogo";
 import { Smartphone, Facebook, Instagram, Youtube, Linkedin, Heart } from "lucide-react";
 import { ModalType } from "../types";
 
@@ -14,7 +14,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenModal }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-[#ECE5D8]">
           {/* Column 1: Brand & Socials */}
           <div className="lg:col-span-4 space-y-5">
-            <KimiaLogo size="md" />
+            <MalkiaLogo size="md" />
 
             <div className="pt-2">
               <p className="text-xs font-semibold text-[#575044] mb-3">Suivez-nous</p>

@@ -1,12 +1,14 @@
 import React from "react";
 
-interface KimiaLogoProps {
+interface MalkiaLogoProps {
   className?: string;
   showSubtitle?: boolean;
   size?: "sm" | "md" | "lg";
 }
 
-export const KimiaLogo: React.FC<KimiaLogoProps> = ({
+export type KimiaLogoProps = MalkiaLogoProps;
+
+export const MalkiaLogo: React.FC<MalkiaLogoProps> = ({
   className = "",
   showSubtitle = true,
   size = "md",
@@ -78,3 +80,5 @@ export const KimiaLogo: React.FC<KimiaLogoProps> = ({
     </div>
   );
 };
+
+export const KimiaLogo = MalkiaLogo;
