@@ -12,7 +12,7 @@
  */
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
-const TARGET_EMAIL = process.argv[2] || process.env.ADMIN_EMAIL || "test@example.cd";
+const TARGET_EMAIL = process.argv[2] || process.env.ADMIN_EMAIL || "malk'ia@h-justicia.com";
 
 console.log("=================================================");
 console.log(" TEST & DIAGNOSTIC AUTOMATISÉ — PLATEFORME MALK'IA");

@@ -39,6 +39,19 @@ export default function App() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Listen to hash for direct access links (e.g. #team, #admin, #redaction, #malkia)
+  useEffect(() => {
+    const handleHash = () => {
+      const h = window.location.hash.toLowerCase();
+      if (h === "#team" || h === "#admin" || h === "#redaction" || h === "#malkia") {
+        setActiveModal("team-editor");
+      }
+    };
+    handleHash();
+    window.addEventListener("hashchange", handleHash);
+    return () => window.removeEventListener("hashchange", handleHash);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#22201D] flex flex-col font-sans selection:bg-[#E8C576] selection:text-[#1E1C1A]">
       {/* Top Banner for Urgent Helpline */}

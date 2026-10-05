@@ -66,12 +66,18 @@ export const TeamQuestionModal: React.FC<TeamQuestionModalProps> = ({
   const handleVerifyPin = (e: React.FormEvent) => {
     e.preventDefault();
     setPinError(null);
-    if (pin.trim() === "malkia2026") {
+    const cleaned = pin.trim().toLowerCase();
+    if (
+      cleaned === "malkia2026" ||
+      cleaned === "malk'ia@h-justicia.com" ||
+      cleaned === "malkia@h-justicia.com" ||
+      cleaned === "h-justicia"
+    ) {
       setIsAuthenticated(true);
       sessionStorage.setItem("malkia_team_auth", "true");
       fetchActive();
     } else {
-      setPinError("Code PIN incorrect. Veuillez vérifier avec l'équipe MALK'ia.");
+      setPinError("Identifiant ou code d'accès incorrect. Utilisez malk'ia@h-justicia.com ou votre code d'équipe.");
     }
   };
 
@@ -169,11 +175,11 @@ export const TeamQuestionModal: React.FC<TeamQuestionModalProps> = ({
 
           <form onSubmit={handleVerifyPin} className="space-y-3">
             <input
-              type="password"
+              type="text"
               value={pin}
               onChange={(e) => setPin(e.target.value)}
-              placeholder="Entrez le code secret d'équipe..."
-              className="w-full px-4 py-2.5 rounded-xl border border-[#DDD5C5] text-center text-sm font-mono tracking-widest focus:outline-hidden focus:ring-2 focus:ring-[#D4A346]"
+              placeholder="malk'ia@h-justicia.com ou PIN d'équipe..."
+              className="w-full px-4 py-2.5 rounded-xl border border-[#DDD5C5] text-center text-sm focus:outline-hidden focus:ring-2 focus:ring-[#D4A346]"
               autoFocus
             />
             <button

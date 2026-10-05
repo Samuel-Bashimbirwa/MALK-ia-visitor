@@ -130,7 +130,7 @@ export async function sendEmail({
   const timestamp = new Date().toISOString();
   const logId = `MAIL-${Date.now().toString(36).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;
   const config = getEffectiveSmtpConfig();
-  const fromAddress = config.user || process.env.ADMIN_EMAIL || "contact@malkia.cd";
+  const fromAddress = config.user || process.env.ADMIN_EMAIL || "malk'ia@h-justicia.com";
 
   const transporter = getMailTransporter();
 

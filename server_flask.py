@@ -12,7 +12,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "")
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL") or os.environ.get("SMTP_USER") or "malk'ia@h-justicia.com"
 SMTP_SERVER = os.environ.get("SMTP_SERVER", "smtp.gmail.com")
 SMTP_PORT = int(os.environ.get("SMTP_PORT", 587))
 SMTP_USER = os.environ.get("SMTP_USER", "")

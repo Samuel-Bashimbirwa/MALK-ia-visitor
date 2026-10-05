@@ -885,7 +885,7 @@ export const CommunityHub: React.FC<CommunityHubProps> = ({ onOpenModal }) => {
                   <div className="pt-2 flex items-center justify-between">
                     <p className="text-[11px] text-[#7A7264] flex items-center gap-1">
                       <ShieldAlert className="w-3.5 h-3.5 text-[#8C6B24]" />
-                      <span>Reçu à contact@malkia.cd • Modération manuelle</span>
+                      <span>Reçu à malk'ia@h-justicia.com • Modération manuelle</span>
                     </p>
 
                     <button

@@ -15,7 +15,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL") or os.environ.get("SMTP_USER") or "samuelbashimbirwa@gmail.com"
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL") or os.environ.get("SMTP_USER") or "malk'ia@h-justicia.com"
 SMTP_HOST = os.environ.get("SMTP_HOST") or os.environ.get("SMTP_SERVER") or "smtp.gmail.com"
 SMTP_PORT = int(os.environ.get("SMTP_PORT") or 465)
 SMTP_USER = os.environ.get("SMTP_USER") or ADMIN_EMAIL
@@ -449,11 +449,17 @@ def get_quiz_48h():
 @app.route("/api/admin/quiz-question", methods=["POST"])
 def post_admin_quiz_question():
     data = request.get_json() or {}
-    admin_pin = (data.get("adminPin") or "").strip()
-    valid_pin = os.environ.get("TEAM_PIN", "malkia2026")
+    admin_pin = (data.get("adminPin") or "").strip().lower()
+    valid_pin = os.environ.get("TEAM_PIN", "malkia2026").lower()
     
-    if admin_pin != valid_pin:
-        return jsonify({"error": "Code secret d'équipe invalide. Accès réservé à l'équipe MALK'ia."}), 403
+    is_authorized = (
+        admin_pin == valid_pin or
+        admin_pin == "malk'ia@h-justicia.com" or
+        admin_pin == "malkia@h-justicia.com" or
+        admin_pin == (os.environ.get("ADMIN_EMAIL") or "").lower()
+    )
+    if not is_authorized:
+        return jsonify({"error": "Accès refusé. Utilisez malk'ia@h-justicia.com ou le code secret d'équipe."}), 403
 
     question = (data.get("question") or "").strip()
     explanation = (data.get("explanation") or "").strip()
@@ -495,7 +501,7 @@ def post_quiz_participate():
     if not email:
         return jsonify({"error": "Adresse email requise pour recevoir la confirmation."}), 400
 
-    status_share_text = "🎯 J'ai répondu au questionnaire 48H sur MALK'ia RDC ! Connais-tu tes droits face aux violences ? Teste ton score toi aussi sur : https://malkia.cd/#communaute #MALKiaRDC"
+    status_share_text = "🎯 J'ai répondu au questionnaire 48H sur MALK'ia RDC ! Connais-tu tes droits face aux violences ? Teste ton score toi aussi sur : https://h-justicia.com/#communaute #MALKiaRDC"
     
     visitor_html = f"""
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #E6DDCC; border-radius: 12px; background: #FAF8F5;">

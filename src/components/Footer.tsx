@@ -171,7 +171,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenModal }) => {
 
         {/* Bottom bar */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#7A7264]">
-          <p>© 2026 MALK'ia. Tous droits réservés.</p>
+          <p>© 2026 MALK'ia — H-Justicia (<a href="https://h-justicia.com" className="hover:underline font-medium text-[#5C5343]">h-justicia.com</a>). Tous droits réservés.</p>
           <p className="flex items-center gap-1.5">
             <span>Une initiative pour des femmes plus fortes en RDC</span>
             <span className="text-[#C5993F]">💛</span>

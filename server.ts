@@ -32,7 +32,7 @@ const inquiries: Inquiry[] = [
     province: "Kinshasa",
     createdAt: new Date(Date.now() - 3600000 * 5).toISOString(),
     status: "transmitted_to_lawyer",
-    targetRecipient: process.env.ADMIN_EMAIL || "contact@malkia.cd",
+    targetRecipient: process.env.ADMIN_EMAIL || "malk'ia@h-justicia.com",
   },
   {
     id: "MALK-8422",
@@ -43,12 +43,12 @@ const inquiries: Inquiry[] = [
     province: "Nord-Kivu",
     createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
     status: "pending",
-    targetRecipient: process.env.ADMIN_EMAIL || "contact@malkia.cd",
+    targetRecipient: process.env.ADMIN_EMAIL || "malk'ia@h-justicia.com",
   },
 ];
 
 export const app = express();
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.SMTP_USER || "contact@malkia.cd";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.SMTP_USER || "malk'ia@h-justicia.com";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -453,11 +453,18 @@ apiRouter.post("/admin/quiz-question", async (req, res) => {
     authorName = "Équipe MALK'ia",
   } = req.body;
 
-  // Verify PIN (default malkia2026, or check environment variable)
+  // Verify PIN or authorized email
   const validPin = process.env.TEAM_PIN || "malkia2026";
-  if (!adminPin || String(adminPin).trim() !== validPin) {
+  const pinInput = String(adminPin || "").trim().toLowerCase();
+  const isAuthorized =
+    pinInput === validPin.toLowerCase() ||
+    pinInput === "malk'ia@h-justicia.com" ||
+    pinInput === "malkia@h-justicia.com" ||
+    pinInput === (process.env.ADMIN_EMAIL || "").toLowerCase();
+
+  if (!isAuthorized) {
     return res.status(403).json({
-      error: "Code secret d'équipe invalide. Accès réservé à l'équipe MALK'ia.",
+      error: "Accès refusé. Utilisez malk'ia@h-justicia.com ou le code secret d'équipe.",
     });
   }
 
@@ -536,7 +543,7 @@ apiRouter.post("/quiz-participate", async (req, res) => {
   const cleanName = String(name || "Chère participante").trim();
   const cleanEmail = String(email).trim().toLowerCase();
   const cleanPhone = String(phone || "Non renseigné").trim();
-  const statusShareText = `🎯 J'ai répondu au questionnaire 48H sur MALK'ia RDC ! Connais-tu tes droits face aux violences ? Teste ton score toi aussi sur : https://malkia.cd/#communaute #MALKiaRDC`;
+  const statusShareText = `🎯 J'ai répondu au questionnaire 48H sur MALK'ia RDC ! Connais-tu tes droits face aux violences ? Teste ton score toi aussi sur : https://h-justicia.com/#communaute #MALKiaRDC`;
 
   // 1. Send confirmation email to visitor
   const visitorMail = await sendEmail({

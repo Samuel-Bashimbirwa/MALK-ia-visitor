@@ -89,7 +89,7 @@ export const DiagnosticsModalContent: React.FC<{ onClose: () => void }> = () => 
   };
 
   const copyEnvSample = () => {
-    const text = `SMTP_HOST=smtp.gmail.com\nSMTP_PORT=465\nSMTP_SECURE=true\nSMTP_USER=votre-email@gmail.com\nSMTP_PASS=votre_mot_de_passe_application_16_lettres\nSMTP_FROM="MALK'ia RDC <votre-email@gmail.com>"\nADMIN_EMAIL=votre-email@gmail.com`;
+    const text = `SMTP_HOST=smtp.gmail.com\nSMTP_PORT=465\nSMTP_SECURE=true\nSMTP_USER=malk'ia@h-justicia.com\nSMTP_PASS=votre_mot_de_passe_ou_application\nSMTP_FROM="MALK'ia RDC <malk'ia@h-justicia.com>"\nADMIN_EMAIL=malk'ia@h-justicia.com`;
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
